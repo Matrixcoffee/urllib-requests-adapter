@@ -54,6 +54,10 @@ class Response:
 		if DEBUG: print("Returning:", repr(j))
 		return j
 
+	def __len__(self):
+		if self._rdata is None: return 0
+		return len(self._rdata)
+
 	def execute(self):
 		r = urllib.request.urlopen(self.rq, capath=capath)
 		self._rdata = r.read()
