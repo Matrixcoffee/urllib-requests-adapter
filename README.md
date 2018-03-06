@@ -35,7 +35,7 @@ See [CONTRIBUTING.rst](https://github.com/matrix-org/matrix-python-sdk/blob/mast
 Get answers from @Coffee:matrix.org and others in [#matrix-python-sdk:matrix.org](https://matrix.to/#/#matrix-python-sdk:matrix.org).
 
 ## License
-Copyright 2017 @Coffee:matrix.org
+Copyright 2017, 2018 @Coffee:matrix.org
 
    > Licensed under the Apache License, Version 2.0 (the "License");
    > you may not use this file except in compliance with the License.
