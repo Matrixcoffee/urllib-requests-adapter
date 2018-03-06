@@ -18,10 +18,14 @@ import json
 
 capath="/etc/ssl/certs"
 
-import socks
-import socket
-socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050)
-socket.socket = socks.socksocket
+try:
+	# For TAILS. See README.md on how to install socks.py
+	import socks
+	import socket
+	socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050)
+	socket.socket = socks.socksocket
+except:
+	pass
 
 DEBUG=False
 
