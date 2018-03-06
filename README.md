@@ -32,7 +32,7 @@ Happy hacking!
 See [CONTRIBUTING.rst](https://github.com/matrix-org/matrix-python-sdk/blob/master/CONTRIBUTING.rst).
 
 ## Getting help
-Get answers from @Coffee:matrix.org and others in [#matrix-dev:matrix.org](https://matrix.to/#/#matrix-dev:matrix.org).
+Get answers from @Coffee:matrix.org and others in [#matrix-python-sdk:matrix.org](https://matrix.to/#/#matrix-python-sdk:matrix.org).
 
 ## License
 Copyright 2017 @Coffee:matrix.org
