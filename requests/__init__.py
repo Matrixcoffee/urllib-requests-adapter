@@ -39,7 +39,11 @@ class Response:
 		url = endpoint
 		if (params is not None):
 			url = url + "?" + urllib.parse.urlencode(params)
-		self.rq = MethodRequest(url, method, data.encode(), headers)
+		if data is not None:
+			if isinstance(data, str):
+				data = data.encode()
+		self._rdata = None
+		self.rq = MethodRequest(url, method, data, headers)
 
 	def map_request(self, r):
 		self.status_code = r.status
