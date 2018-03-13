@@ -14,7 +14,10 @@ Requests mini clone
 
 import urllib.request
 import urllib.parse
+import http.client
 import json
+
+import requests
 
 capath="/etc/ssl/certs"
 
@@ -63,7 +66,12 @@ class Response:
 		return len(self._rdata)
 
 	def execute(self):
-		r = urllib.request.urlopen(self.rq, capath=capath)
+		try:
+			r = urllib.request.urlopen(self.rq, capath=capath)
+		except http.client.HTTPException as e:
+			e2 = exceptions.RequestException("http.client." + repr(e))
+			e2.code = 9999
+			raise e2
 		self._rdata = r.read()
 		self.map_request(r)
 		r.close()
