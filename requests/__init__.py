@@ -31,6 +31,7 @@ except:
 	pass
 
 DEBUG=False
+GLOBAL_TIMEOUT_SECONDS=None
 
 class MethodRequest(urllib.request.Request):
 	def __init__(self, url, method="GET", data=None, headers={}, origin_req_host=None, unverifiable=False):
@@ -67,7 +68,10 @@ class Response:
 
 	def execute(self):
 		try:
-			r = urllib.request.urlopen(self.rq, capath=capath)
+			if GLOBAL_TIMEOUT_SECONDS is None:
+				r = urllib.request.urlopen(self.rq, capath=capath)
+			else:
+				r = urllib.request.urlopen(self.rq, None, GLOBAL_TIMEOUT_SECONDS, capath=capath)
 		except http.client.HTTPException as e:
 			e2 = exceptions.RequestException("http.client." + repr(e))
 			e2.code = 9999
