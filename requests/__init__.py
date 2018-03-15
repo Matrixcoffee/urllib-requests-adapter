@@ -18,6 +18,7 @@ import http.client
 import json
 
 import requests
+import requests.exceptions
 
 capath="/etc/ssl/certs"
 
