@@ -43,7 +43,7 @@ class MethodRequest(urllib.request.Request):
 	    return self.method
 
 class Response:
-	def __init__(self, method, endpoint, params, data=None, headers=None, verify=None):
+	def __init__(self, method, endpoint, params, data=None, headers=None, verify=None, timeout=None):
 		if DEBUG: print("New Response with", repr(method), repr(endpoint), repr(params), repr(data), repr(headers), repr(verify))
 		url = endpoint
 		if (params is not None):
@@ -53,6 +53,7 @@ class Response:
 				data = data.encode()
 		self._rdata = None
 		self.rq = MethodRequest(url, method, data, headers)
+		self.timeout_seconds = timeout
 
 	def map_request(self, r):
 		self.status_code = r.status
@@ -68,11 +69,13 @@ class Response:
 		return len(self._rdata)
 
 	def execute(self):
+		timeout = self.timeout_seconds
+		if timeout is None: timeout = GLOBAL_TIMEOUT_SECONDS
 		try:
-			if GLOBAL_TIMEOUT_SECONDS is None:
+			if timeout is None:
 				r = urllib.request.urlopen(self.rq, capath=capath)
 			else:
-				r = urllib.request.urlopen(self.rq, None, GLOBAL_TIMEOUT_SECONDS, capath=capath)
+				r = urllib.request.urlopen(self.rq, None, timeout, capath=capath)
 		except http.client.HTTPException as e:
 			e2 = exceptions.RequestException("http.client." + repr(e))
 			e2.code = 9999
@@ -82,5 +85,5 @@ class Response:
 		r.close()
 		return self
 
-def request(method, endpoint, params, data=None, headers=None, verify=None):
-	return Response(method, endpoint, params, data=data, headers=headers).execute()
+def request(method, endpoint, params, data=None, headers=None, verify=None, timeout=None):
+	return Response(method, endpoint, params, data=data, headers=headers, timeout=timeout).execute()
