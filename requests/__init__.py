@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 
-__title__ = 'fake-requests'
+__title__ = 'urllib-requests-adapter'
 __version__ = '0.0.1'
 __author__ = '@Coffee:matrix.org'
 __license__ = 'Apache 2.0'
-__copyright__ = 'Copyright 2017 Coffee'
+__copyright__ = 'Copyright 2017, 2018 Coffee'
 
 """
-Requests mini clone
+Urllib Requests Adapter
 
-"Fake" library pretending to be requests, but implementing the bare minimum necessary for matrix-python-sdk, wrapping standard urllib.
+Make simple programs depending on requests[1] work with urllib instead, without
+changing a single line of code! Mainly intended for matrix-python-sdk[2], but
+that doesn't prevent it from being useful otherwise.
+
+[1]: https://github.com/kennethreitz/requests
+[2]: https://github.com/matrix-org/matrix-python-sdk
 """
 
 import urllib.request
