@@ -44,7 +44,7 @@ class MethodRequest(urllib.request.Request):
 
 class Response:
 	def __init__(self, method, endpoint, params, data=None, headers=None, verify=None, timeout=None):
-		if DEBUG: print("New Response with", repr(method), repr(endpoint), repr(params), repr(data), repr(headers), repr(verify))
+		if DEBUG: print("New Response with", repr(method), repr(endpoint), repr(params), repr(data), repr(headers), repr(verify), repr(timeout))
 		url = endpoint
 		if (params is not None):
 			url = url + "?" + urllib.parse.urlencode(params)
