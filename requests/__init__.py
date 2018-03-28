@@ -22,23 +22,36 @@ import urllib.parse
 import urllib.error
 import http.client
 import json
+import os
 
 import requests
 import requests.exceptions
 
 capath="/etc/ssl/certs"
 
-try:
-	# For TAILS. See README.md on how to install socks.py
+import logging
+logger = logging.getLogger('urllib-requests-adapter')
+
+def _setup_socks5():
+	s5 = os.environ.get('SOCKS5_SERVER', None)
+	if not s5: return
+	s5s = s5.split(':')
+	if len(s5s) != 2:
+		logger.warning("Badly formatted environment variable SOCKS5_SERVER: {!r}".format(s5))
+		return
+
+	host = s5s[0]
+	port = int(s5s[1])
+
 	import socks
 	import socket
-	socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 9050)
+	socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, host, port)
 	socket.socket = socks.socksocket
-except:
-	pass
 
 DEBUG=False
 GLOBAL_TIMEOUT_SECONDS=None
+
+_setup_socks5()
 
 class MethodRequest(urllib.request.Request):
 	def __init__(self, url, method="GET", data=None, headers={}, origin_req_host=None, unverifiable=False):

@@ -19,9 +19,12 @@ The end goal of all of this is to be able to simply plop [matrix-python-sdk](htt
 $ cd $SOMEWHERE
 $ git clone https://github.com/matrix-org/matrix-python-sdk.git
 $ git clone https://github.com/Matrixcoffee/urllib-requests-adapter.git
-$ wget -P urllib-requests-adapter https://github.com/Anorov/PySocks/raw/master/socks.py # (optional)
 ```
-And to try:
+Should your Python lack socks support, you can add it to your project like so:
+```
+$ wget -P urllib-requests-adapter https://github.com/Anorov/PySocks/raw/master/socks.py
+```
+And finally, to give it a try:
 ```
 $ PYTHONPATH=matrix-python-sdk:urllib-requests-adapter python3 matrix-python-sdk/samples/SimpleChatClient.py
 ```
