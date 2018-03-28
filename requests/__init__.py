@@ -19,6 +19,7 @@ that doesn't prevent it from being useful otherwise.
 
 import urllib.request
 import urllib.parse
+import urllib.error
 import http.client
 import json
 
@@ -81,9 +82,12 @@ class Response:
 				r = urllib.request.urlopen(self.rq, capath=capath)
 			else:
 				r = urllib.request.urlopen(self.rq, None, timeout, capath=capath)
-		except http.client.HTTPException as e:
-			e2 = exceptions.RequestException("http.client." + repr(e))
-			e2.code = 9999
+		except urllib.error.HTTPError as e:
+			self.status_code = e.code
+			self.text = e.msg
+			return self
+		except (http.client.HTTPException, urllib.error.URLError) as e:
+			e2 = exceptions.RequestException("{}.{!r}".format(type(e).__module__, e))
 			raise e2
 		self._rdata = r.read()
 		self.map_request(r)
