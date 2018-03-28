@@ -27,7 +27,9 @@ import os
 import requests
 import requests.exceptions
 
-capath="/etc/ssl/certs"
+CAFILE = None
+CAPATH = None
+CONTEXT = None
 
 import logging
 logger = logging.getLogger('urllib-requests-adapter')
@@ -47,6 +49,31 @@ def _setup_socks5():
 	import socket
 	socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, host, port)
 	socket.socket = socks.socksocket
+
+def _setup_tls():
+	# Ensure at least _something_ is configured.
+	# If not, we might not be verifying certificates and
+	# thus make insecure connections.
+
+	# Defaults will not work with Python 3.2. If you need it to work there,
+	# explicitly set either CAFILE or CAPATH after importing this module.
+
+	global CAFILE, CAPATH, CONTEXT
+	if CAFILE is None and CAPATH is None and CONTEXT is None:
+		import ssl
+		CONTEXT = ssl.create_default_context()
+		# Overkill all the overkill
+		CONTEXT.verify_mode = ssl.CERT_REQUIRED
+
+def _get_tls_parms():
+	# Return a dict suitable for passing to urlopen() as dictionary arguments
+	# via **.
+	_setup_tls()
+	parms = {}
+	if CAFILE is not None: parms['cafile'] = CAFILE
+	if CAPATH is not None: parms['capath'] = CAPATH
+	if CONTEXT is not None: parms['context'] = CONTEXT
+	return parms
 
 DEBUG=False
 GLOBAL_TIMEOUT_SECONDS=None
@@ -92,9 +119,9 @@ class Response:
 		if timeout is None: timeout = GLOBAL_TIMEOUT_SECONDS
 		try:
 			if timeout is None:
-				r = urllib.request.urlopen(self.rq, capath=capath)
+				r = urllib.request.urlopen(self.rq, **_get_tls_parms())
 			else:
-				r = urllib.request.urlopen(self.rq, None, timeout, capath=capath)
+				r = urllib.request.urlopen(self.rq, None, timeout, **_get_tls_parms())
 		except urllib.error.HTTPError as e:
 			self.status_code = e.code
 			self.text = e.msg
