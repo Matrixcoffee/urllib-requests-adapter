@@ -23,6 +23,7 @@ import urllib.error
 import http.client
 import json
 import os
+import socket
 
 import requests
 import requests.exceptions
@@ -126,7 +127,7 @@ class Response:
 			self.status_code = e.code
 			self.text = e.msg
 			return self
-		except (http.client.HTTPException, urllib.error.URLError) as e:
+		except (http.client.HTTPException, urllib.error.URLError, socket.timeout) as e:
 			e2 = exceptions.RequestException("{}.{!r}".format(type(e).__module__, e))
 			raise e2
 		self._rdata = r.read()
