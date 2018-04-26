@@ -17,6 +17,8 @@ that doesn't prevent it from being useful otherwise.
 [2]: https://github.com/matrix-org/matrix-python-sdk
 """
 
+import pprint
+import sys
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -91,7 +93,7 @@ class MethodRequest(urllib.request.Request):
 
 class Response:
 	def __init__(self, method, endpoint, params, data=None, headers=None, verify=None, timeout=None):
-		if DEBUG: print("New Response with", repr(method), repr(endpoint), repr(params), repr(data), repr(headers), repr(verify), repr(timeout))
+		if DEBUG: print("New Response with", repr(method), repr(endpoint), repr(params), repr(data), repr(headers), repr(verify), repr(timeout), file=sys.stderr)
 		url = endpoint
 		if (params is not None):
 			url = url + "?" + urllib.parse.urlencode(params)
@@ -105,10 +107,11 @@ class Response:
 	def map_request(self, r):
 		self.status_code = r.status
 		self.text = r.reason
+		if DEBUG: print("map_request:", repr(r.status), repr(r.reason), file=sys.stderr)
 
 	def json(self):
 		j = json.loads(self._rdata.decode())
-		if DEBUG: print("Returning:", repr(j))
+		if DEBUG: pprint.pprint(j, stream=sys.stderr)
 		return j
 
 	def __len__(self):
@@ -131,6 +134,7 @@ class Response:
 			e2 = exceptions.RequestException("{}.{!r}".format(type(e).__module__, e))
 			raise e2
 		self._rdata = r.read()
+		if DEBUG: print("Response._rdata set to:", repr(self._rdata), file=sys.stderr)
 		self.map_request(r)
 		r.close()
 		return self
