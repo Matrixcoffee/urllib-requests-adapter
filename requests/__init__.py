@@ -37,6 +37,9 @@ CONTEXT = None
 import logging
 logger = logging.getLogger('urllib-requests-adapter')
 
+RequestException = requests.exceptions.RequestException
+MissingSchema = requests.exceptions.MissingSchema
+
 def _setup_socks5():
 	s5 = os.environ.get('SOCKS5_SERVER', None)
 	if not s5: return
@@ -141,3 +144,7 @@ class Response:
 
 def request(method, endpoint, params, data=None, headers=None, verify=None, timeout=None):
 	return Response(method, endpoint, params, data=data, headers=headers, timeout=timeout).execute()
+
+
+class Session:
+	request = staticmethod(request)
